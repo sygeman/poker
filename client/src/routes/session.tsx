@@ -11,6 +11,7 @@ type User = {
 export const Session: Component = () => {
   const params = useParams();
   const valuesSet = [1, 2, 3, 5, 8, 13, 21];
+  const maxValue = valuesSet[valuesSet.length - 1];
   const [currentUser, setCurrentUser] = createSignal<User | null>(null);
   const [users, setUsers] = createSignal<User[]>([]);
 
@@ -23,6 +24,12 @@ export const Session: Component = () => {
   const socket = new WebSocket(
     `ws://localhost:3333/?session=${params.session}&token=${token}`
   );
+
+  socket.addEventListener("open", (event) => {
+    if (localStorage.getItem("name")) {
+      setName(localStorage.getItem("name"));
+    }
+  });
 
   socket.addEventListener("message", (event) => {
     try {
@@ -42,7 +49,7 @@ export const Session: Component = () => {
       users().reduce((a, b) => a + b.value, 0) /
       users().filter((user) => user.value > 0).length
   );
-  const percent = createMemo(() => (avg() / 21) * 100);
+  const percent = createMemo(() => (avg() / maxValue) * 100);
 
   const setValue = (value: number) => {
     socket.send(JSON.stringify({ type: "SET_VALUE", data: value }));
@@ -50,6 +57,7 @@ export const Session: Component = () => {
 
   const setName = (name: string) => {
     socket.send(JSON.stringify({ type: "SET_NAME", data: name }));
+    localStorage.setItem("name", name);
   };
 
   return (
@@ -80,7 +88,7 @@ export const Session: Component = () => {
                 >
                   <div class="right-0 top-2 absolute text-xs font-semibold">
                     <span>{avg().toFixed(1)}</span>
-                    <span class="text-indigo-300/40">/21</span>
+                    <span class="text-indigo-300/40">/{maxValue}</span>
                   </div>
                 </div>
               </div>
