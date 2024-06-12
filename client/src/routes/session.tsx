@@ -2,16 +2,36 @@ import { A, useParams } from "@solidjs/router";
 import { Show, createSignal, type Component } from "solid-js";
 import { Card } from "../components/card";
 
+type User = {
+  id: string;
+  name: string;
+  value: number;
+};
+
 export const Session: Component = () => {
   const params = useParams();
   const valuesSet = [1, 2, 3, 5, 8, 13, 21];
   const [selected, setSelected] = createSignal(0);
-  const users = [
-    { name: "Антон", value: 3 },
-    { name: "Саша", value: 21 },
-    { name: "Андрей", value: 0 },
-  ];
-  const avg = users.reduce((a, b) => a + b.value, 0) / users.length;
+  const [users, setUsers] = createSignal<User[]>([]);
+
+  const socket = new WebSocket(
+    `ws://localhost:3333/?session=${params.session}`
+  );
+
+  socket.addEventListener("message", (event) => {
+    try {
+      const data = JSON.parse(event.data);
+      console.log(data);
+
+      if (data.type === "UPDATE_SESSION") {
+        setUsers(data.data.users);
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  });
+
+  const avg = users().reduce((a, b) => a + b.value, 0) / users.length;
   const percent = (avg / 21) * 100;
 
   return (
@@ -51,7 +71,7 @@ export const Session: Component = () => {
 
         <div class="flex py-4 justify-center">
           <div class="flex gap-4 py-4 justify-center flex-col items-end">
-            {users.map(({ name, value }) => (
+            {users().map(({ name, value }) => (
               <div class="flex items-center gap-2 h-10 w-full bg-black/40 rounded-lg">
                 <div class="flex w-80 px-4 text-sm font-semibold">{name}</div>
                 <Show when={value > 0}>
