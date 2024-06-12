@@ -1,7 +1,7 @@
 import cors from "@elysiajs/cors";
-import { Elysia } from "elysia";
+import { Elysia, t } from "elysia";
 
-type SessionUser = Map<string, { value: number }>;
+type SessionUser = Map<string, { value: number; name: string }>;
 type Session = Map<string, { users: SessionUser }>;
 
 const clients = new Map();
@@ -12,12 +12,14 @@ const updateSessionData = (sessionId: string) => {
 
   sessions
     .get(sessionId)
-    ?.users.forEach(({ value }, userId) =>
-      users.push({ id: userId, name: `User ${userId}`, value })
+    ?.users.forEach(({ value, name }, userId) =>
+      users.push({ id: userId, name, value })
     );
 
   users.forEach((user) =>
-    clients.get(user.id).send({ type: "UPDATE_SESSION", data: { users } })
+    clients
+      .get(user.id)
+      .send({ type: "UPDATE_SESSION", data: { users, currentUser: user.id } })
   );
 };
 
@@ -31,6 +33,8 @@ const app = new Elysia()
   })
   .ws("/", {
     open(ws) {
+      const token = ws.data.query.token;
+
       clients.set(ws.id, ws);
       const session = ws.data.query.session;
       if (!session || !sessions.has(session)) {
@@ -38,7 +42,9 @@ const app = new Elysia()
         return;
       }
 
-      sessions.get(session)?.users.set(ws.id, { value: 3 });
+      sessions
+        .get(session)
+        ?.users.set(ws.id, { value: 0, name: `User ${ws.id}` });
 
       updateSessionData(session);
     },
@@ -55,8 +61,23 @@ const app = new Elysia()
 
       updateSessionData(session);
     },
-    message(ws, message) {
-      console.log(message);
+    message(ws, message: any) {
+      const session = ws.data.query.session;
+      if (!session) return;
+      const user = sessions.get(session)?.users.get(ws.id);
+      if (!user) return;
+
+      if (message.type === "SET_VALUE") {
+        sessions
+          .get(session)
+          ?.users.set(ws.id, { ...user, value: message.data });
+      } else if (message.type === "SET_NAME") {
+        sessions
+          .get(session)
+          ?.users.set(ws.id, { ...user, name: message.data });
+      }
+
+      updateSessionData(session);
     },
   })
   .listen(3333);
