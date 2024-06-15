@@ -108,7 +108,7 @@ export const Session: Component = () => {
 
                 {id === currentUser()?.id ? (
                   <input
-                    class="flex w-80 px-4 text-sm font-semibold bg-transparent"
+                    class="flex w-80 px-4 text-sm font-semibold bg-transparent h-full outline-none"
                     value={name}
                     onChange={(e) => setName(e.target.value)}
                   />
