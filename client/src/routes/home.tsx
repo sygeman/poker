@@ -2,7 +2,7 @@ import { useNavigate } from "@solidjs/router";
 import type { Component } from "solid-js";
 import { createRoom } from "../api/poker";
 
-export const Home: Component = () => {
+export const HomeRoute: Component = () => {
   const navigate = useNavigate();
 
   return (

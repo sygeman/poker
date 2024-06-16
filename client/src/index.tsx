@@ -2,8 +2,8 @@
 import "./index.css";
 import { render } from "solid-js/web";
 
-import { Home } from "./routes/home";
-import { Session } from "./routes/session";
+import { HomeRoute } from "./routes/home";
+import { SessionRoute } from "./routes/session";
 import { Route, Router } from "@solidjs/router";
 
 const root = document.getElementById("root");
@@ -17,8 +17,8 @@ if (import.meta.env.DEV && !(root instanceof HTMLElement)) {
 render(
   () => (
     <Router>
-      <Route path="/" component={Home} />
-      <Route path="/:session" component={Session} />
+      <Route path="/" component={HomeRoute} />
+      <Route path="/:session" component={SessionRoute} />
     </Router>
   ),
   root!
