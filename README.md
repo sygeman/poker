@@ -1,4 +1,4 @@
-# poker
+# Scrum Poker Planning
 
 ## ⚙️ Dev
 
