@@ -56,6 +56,7 @@ const updateSessionData = (sessionId: string) => {
 const app = new Elysia()
   .use(cors())
   .get("/", () => Bun.file("dist/index.html"))
+  .get("/:session", () => Bun.file("dist/index.html"))
   .use(staticPlugin({ assets: "dist/assets", prefix: "/assets" }))
   .post("/api/new", () => {
     const sessionId = crypto.randomUUID();
