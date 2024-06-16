@@ -1,7 +1,7 @@
 import type { Component } from "solid-js";
 
 export const Card: Component<{
-  value?: number;
+  value: number;
   selected?: boolean;
   size?: 1 | 2;
   onClick?: () => void;

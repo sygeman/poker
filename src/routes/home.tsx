@@ -1,6 +1,15 @@
 import { useNavigate } from "@solidjs/router";
 import type { Component } from "solid-js";
-import { createRoom } from "../api/poker";
+
+const createRoom = async () => {
+  const createRoomMutation = await fetch(`${location.origin}/api/new`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+  });
+
+  const data = await createRoomMutation.json();
+  return data?.roomId;
+};
 
 export const HomeRoute: Component = () => {
   const navigate = useNavigate();

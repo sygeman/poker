@@ -8,7 +8,7 @@ export const SessionRoute: Component = () => {
   const [session, setSession] = createSignal<Session | null>(null);
 
   const socket = new WebSocket(
-    `ws://localhost:3333/?session=${params.session}`
+    `ws://${location.host}/?session=${params.session}`
   );
 
   socket.addEventListener("open", () => {
@@ -50,7 +50,7 @@ export const SessionRoute: Component = () => {
                 onClick={() => socketAction({ type: "SET_VALUE", data: value })}
               />
             ))}
-            <Show when={session()?.avg > 0}>
+            <Show when={session()?.avg}>
               <div class="h-px w-full absolute left-0 -bottom-4 flex bg-black/40">
                 <div
                   class="h-px w-full absolute left-0 flex bg-indigo-300/40"

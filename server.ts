@@ -1,5 +1,6 @@
 import cors from "@elysiajs/cors";
 import { Elysia, t } from "elysia";
+import { staticPlugin } from "@elysiajs/static";
 
 type SessionUser = Map<string, { value: number; name: string }>;
 type Session = Map<string, { users: SessionUser; hiddenValues: Boolean }>;
@@ -54,10 +55,11 @@ const updateSessionData = (sessionId: string) => {
 
 const app = new Elysia()
   .use(cors())
-  .post("/rooms/create", () => {
+  .get("/", () => Bun.file("dist/index.html"))
+  .use(staticPlugin({ assets: "dist/assets", prefix: "/assets" }))
+  .post("/api/new", () => {
     const sessionId = crypto.randomUUID();
     sessions.set(sessionId, { users: new Map(), hiddenValues: true });
-
     return { roomId: sessionId };
   })
   .ws("/", {
@@ -130,6 +132,4 @@ const app = new Elysia()
   })
   .listen(3333);
 
-console.log(
-  `🦊 Elysia is running at http://${app.server?.hostname}:${app.server?.port}`
-);
+console.log(`Running at http://${app.server?.hostname}:${app.server?.port}`);
