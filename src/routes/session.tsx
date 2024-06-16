@@ -8,7 +8,7 @@ export const SessionRoute: Component = () => {
   const [session, setSession] = createSignal<Session | null>(null);
 
   const socket = new WebSocket(
-    `ws://${location.host}/?session=${params.session}`
+    `${location.origin.replace("http", "ws")}/?session=${params.session}`
   );
 
   socket.addEventListener("open", () => {
