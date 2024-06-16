@@ -3,13 +3,15 @@
   "version": "0.1.0",
   "description": "Scrum Poker Planning",
   "scripts": {
-    "dev": "vite",
     "build": "vite build",
-    "server:dev": "bun run --watch server.ts"
+    "client:dev": "vite",
+    "server:dev": "bun run --watch server.ts",
+    "dev": "concurrently -n client,server \" bun client:dev\" \"bun server:dev\""
   },
   "license": "MIT",
   "devDependencies": {
     "autoprefixer": "10.4.19",
+    "concurrently": "8.2.2",
     "postcss": "8.4.38",
     "tailwindcss": "3.4.4",
     "typescript": "5.4.5",

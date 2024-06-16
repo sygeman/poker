@@ -133,4 +133,6 @@ const app = new Elysia()
   })
   .listen(3333);
 
-console.log(`Running at http://${app.server?.hostname}:${app.server?.port}`);
+console.log(
+  `Server running at http://${app.server?.hostname}:${app.server?.port}`
+);
