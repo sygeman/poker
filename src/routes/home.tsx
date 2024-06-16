@@ -1,8 +1,9 @@
 import { useNavigate } from "@solidjs/router";
 import type { Component } from "solid-js";
+import { restEndpoint } from "../config";
 
 const createRoom = async () => {
-  const createRoomMutation = await fetch(`${location.origin}/api/new`, {
+  const createRoomMutation = await fetch(`${restEndpoint}api/new`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
   });

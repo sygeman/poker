@@ -2,14 +2,13 @@ import { A, useParams } from "@solidjs/router";
 import { Show, createSignal, type Component } from "solid-js";
 import { Card } from "../components/card";
 import type { Session, SocketAction } from "../types";
+import { wsEndpoint } from "../config";
 
 export const SessionRoute: Component = () => {
   const params = useParams();
   const [session, setSession] = createSignal<Session | null>(null);
 
-  const socket = new WebSocket(
-    `${location.origin.replace("http", "ws")}/?session=${params.session}`
-  );
+  const socket = new WebSocket(`${wsEndpoint}?session=${params.session}`);
 
   socket.addEventListener("open", () => {
     const savedName = localStorage.getItem("name");
