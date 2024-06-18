@@ -70,14 +70,14 @@ export const SessionRoute: Component = () => {
         <div class="flex py-4 justify-center space-x-2">
           {session()?.hiddenValues ? (
             <button
-              class="bg-indigo-300/20 hover:bg-indigo-300/30 px-2 py-1 rounded"
+              class="bg-indigo-300/20 hover:bg-indigo-300/30 px-4 py-1.5 rounded font-semibold text-sm"
               onClick={() => socketAction({ type: "SHOW_VALUES" })}
             >
               Показать результаты
             </button>
           ) : (
             <button
-              class="bg-indigo-300/20 hover:bg-indigo-300/30 px-2 py-1 rounded"
+              class="bg-indigo-300/20 hover:bg-indigo-300/30 px-4 py-1.5 rounded font-semibold text-sm"
               onClick={() => socketAction({ type: "RESET_VALUES" })}
             >
               Сбросить
