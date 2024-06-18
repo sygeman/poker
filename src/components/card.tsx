@@ -1,5 +1,11 @@
 import type { Component } from "solid-js";
 
+const getValue = (value: number) => {
+  if (value === 0) return "?";
+  if (value > 0) return value;
+  return "";
+};
+
 export const Card: Component<{
   value: number;
   selected?: boolean;
@@ -18,7 +24,7 @@ export const Card: Component<{
         "bg-indigo-300/20 hover:bg-indigo-300/30": props.selected,
       }}
     >
-      {props.value > 0 ? props.value : ""}
+      {getValue(props.value)}
     </button>
   );
 };
